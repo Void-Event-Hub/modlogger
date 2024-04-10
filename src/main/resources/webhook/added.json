@@ -1,0 +1,37 @@
+{
+    "content": null,
+    "embeds": [
+        {
+            "title": "Additional Mods Detected",
+            "color": 16096779,
+            "fields": [
+                {
+                    "name": "Username",
+                    "value": "<USERNAME>",
+                    "inline": true
+                },
+                {
+                    "name": "Timestamp",
+                    "value": "<TIMESTAMP>",
+                    "inline": true
+                },
+                {
+                    "name": "UUID",
+                    "value": "<UUID>"
+                },
+                {
+                    "name": "Mod Count",
+                    "value": "<ADDED_COUNT> added mods\n<DEFAULT_COUNT>/<DEFAULT_TOTAL> default mods"
+                },
+                {
+                    "name": "Added Mods",
+                    "value": "<ADDED_LIST>"
+                }
+            ],
+            "thumbnail": {
+                "url": "https://mc-heads.net/avatar/<UUID>"
+            }
+        }
+    ],
+    "attachments": []
+}

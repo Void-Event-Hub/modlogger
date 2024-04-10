@@ -1,0 +1,33 @@
+{
+    "content": null,
+    "embeds": [
+        {
+            "title": "New Join",
+            "color": 8702998,
+            "fields": [
+                {
+                    "name": "Username",
+                    "value": "<USERNAME>",
+                    "inline": true
+                },
+                {
+                    "name": "Timestamp",
+                    "value": "<TIMESTAMP>",
+                    "inline": true
+                },
+                {
+                    "name": "UUID",
+                    "value": "<UUID>"
+                },
+                {
+                    "name": "Mod Count",
+                    "value": "<DEFAULT_COUNT>/<DEFAULT_TOTAL> default mods"
+                }
+            ],
+            "thumbnail": {
+                "url": "https://mc-heads.net/avatar/<UUID>"
+            }
+        }
+    ],
+    "attachments": []
+}

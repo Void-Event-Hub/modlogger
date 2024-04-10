@@ -1,0 +1,14 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "net.ollycodes.modlogger.mixins",
+    "compatibilityLevel": "JAVA_8",
+    "refmap": "modlogger.refmap.json",
+    "server": [
+        "PlayerListMixin",
+        "ServerLoginHandlerMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

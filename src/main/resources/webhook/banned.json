@@ -1,0 +1,43 @@
+{
+    "content": null,
+    "embeds": [
+        {
+            "title": "Banned Mods Detected",
+            "color": 15680580,
+            "fields": [
+                {
+                    "name": "Username",
+                    "value": "<USERNAME>",
+                    "inline": true
+                },
+                {
+                    "name": "Timestamp",
+                    "value": "<TIMESTAMP>",
+                    "inline": true
+                },
+                {
+                    "name": "UUID",
+                    "value": "<UUID>"
+                },
+                {
+                    "name": "Mod Count",
+                    "value": "<BANNED_COUNT> banned mod\n<ADDED_COUNT> added mods\n<DEFAULT_COUNT>/<DEFAULT_TOTAL> default mods"
+                },
+                {
+                    "name": "Banned Mods",
+                    "value": "<BANNED_LIST>",
+                    "inline": true
+                },
+                {
+                    "name": "Added Mods",
+                    "value": "<ADDED_LIST>",
+                    "inline": true
+                }
+            ],
+            "thumbnail": {
+                "url": "https://mc-heads.net/avatar/<UUID>"
+            }
+        }
+    ],
+    "attachments": []
+}
