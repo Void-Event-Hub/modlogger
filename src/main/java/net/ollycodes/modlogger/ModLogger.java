@@ -50,9 +50,9 @@ public class ModLogger {
         List<String> defaultMods = new ArrayList<>();
 
         connection.getModData().forEach((mod, data) -> {
-            if (fileHandler.config.bannedMods.contains(mod)) {
+            if (checkModList(fileHandler.config.bannedMods, mod)) {
                 bannedMods.add(mod);
-            } else if (fileHandler.config.defaultMods.contains(mod)) {
+            } else if (checkModList(fileHandler.config.defaultMods, mod)) {
                 defaultMods.add(mod);
             } else {
                 addedMods.add(mod);
@@ -75,5 +75,13 @@ public class ModLogger {
         }
 
         ModLogger.logger.debug("Handled connection for {}", profile.getName());
+    }
+
+    public static boolean checkModList(List<String> modList, String mod) {
+        if (fileHandler.config.matchExactModName) return modList.contains(mod);
+        for (String modName : modList) {
+            if (mod.contains(modName)) return true;
+        }
+        return false;
     }
 }
