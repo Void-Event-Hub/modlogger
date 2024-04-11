@@ -25,7 +25,7 @@ public class PlayerListMixin {
         try {
             ModLogger.handleConnection(connection, profile, info);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            ModLogger.logger.error("Failed to handle connection: {}", e.getMessage());
         }
     }
 }
