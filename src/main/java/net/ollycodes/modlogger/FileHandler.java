@@ -38,7 +38,7 @@ public class FileHandler {
 
     public void readConfig() throws IOException {
         config = gson.fromJson(Files.readString(configPath), Config.class);
-        ModLogger.logger.debug("Read data from config file");
+        ModLogger.logger.debug("Loaded data from config file");
     }
 
     public PlayerRecord getPlayerRecord(String uuid) throws IOException {
