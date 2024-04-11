@@ -35,11 +35,13 @@ public class Webhook {
         String uuid, String username, Date timestamp,
         List<String> defaultMods, List<String> addedMods, List<String> bannedMods
     ) {
+        String action = ModLogger.fileHandler.config.kick.onBanned ? "Kicked" : "None";
         String message = prepareMessage(bannedMessage, uuid, username, timestamp, defaultMods)
             .replace("<BANNED_COUNT>", String.valueOf(bannedMods.size()))
             .replace("<ADDED_COUNT>", String.valueOf(addedMods.size()))
             .replace("<BANNED_LIST>", formatModsList(bannedMods, true))
-            .replace("<ADDED_LIST>", formatModsList(addedMods, true));
+            .replace("<ADDED_LIST>", formatModsList(addedMods, true))
+            .replace("<ACTION>", action);
         sendWebhook(message);
     }
 
@@ -47,9 +49,11 @@ public class Webhook {
         String uuid, String username, Date timestamp,
         List<String> defaultMods, List<String> addedMods
     ) {
+        String action = ModLogger.fileHandler.config.kick.onAdded ? "Kicked" : "None";
         String message = prepareMessage(addedMessage, uuid, username, timestamp, defaultMods)
             .replace("<ADDED_COUNT>", String.valueOf(addedMods.size()))
-            .replace("<ADDED_LIST>", formatModsList(addedMods, true));
+            .replace("<ADDED_LIST>", formatModsList(addedMods, true))
+            .replace("<ACTION>", action);
         sendWebhook(message);
     }
 

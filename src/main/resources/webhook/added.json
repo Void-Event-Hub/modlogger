@@ -21,7 +21,13 @@
                 },
                 {
                     "name": "Mod Count",
-                    "value": "<ADDED_COUNT> added mods\n<DEFAULT_COUNT>/<DEFAULT_TOTAL> default mods"
+                    "value": "<ADDED_COUNT> added mods\n<DEFAULT_COUNT>/<DEFAULT_TOTAL> default mods",
+                    "inline": true
+                },
+                {
+                    "name": "Action Taken",
+                    "value": "<ACTION>",
+                    "inline": true
                 },
                 {
                     "name": "Added Mods",
