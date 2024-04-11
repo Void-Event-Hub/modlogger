@@ -39,7 +39,6 @@ public class Webhook {
             .replace("<BANNED_LIST>", formatModsList(bannedMods))
             .replace("<ADDED_LIST>", formatModsList(addedMods));
         sendWebhook(message);
-        ModLogger.logger.debug("Sent banned message to webhook");
     }
 
     public void sendAddedMessage(
@@ -50,7 +49,6 @@ public class Webhook {
             .replace("<ADDED_COUNT>", String.valueOf(addedMods.size()))
             .replace("<ADDED_LIST>", formatModsList(addedMods));
         sendWebhook(message);
-        ModLogger.logger.debug("Sent added message to webhook");
     }
 
     public void sendDefaultMessage(
@@ -59,7 +57,6 @@ public class Webhook {
     ) {
         String message = prepareMessage(defaultMessage, uuid, username, timestamp, defaultMods);
         sendWebhook(message);
-        ModLogger.logger.debug("Sent default message to webhook");
     }
 
     public void sendWebhook(String message) {
@@ -76,7 +73,7 @@ public class Webhook {
                 .build();
         try {
             client.send(request, HttpResponse.BodyHandlers.ofString());
-            ModLogger.logger.debug("Sent message to webhook: {}", message);
+            ModLogger.logger.debug("Sent message to webhook");
         } catch (IOException | InterruptedException e) {
             ModLogger.logger.error("Failed to send webhook", e);
         }
