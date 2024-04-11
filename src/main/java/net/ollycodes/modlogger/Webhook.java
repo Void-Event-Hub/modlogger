@@ -11,9 +11,9 @@ import java.util.Date;
 import java.util.List;
 
 public class Webhook {
-    private final String bannedMessage = ModLogger.fileHandler.getBannedMessage();
-    private final String addedMessage = ModLogger.fileHandler.getAddedMessage();
-    private final String defaultMessage = ModLogger.fileHandler.getDefaultMessage();
+    private final String bannedMessage = ModLogger.fileHandler.getMessage("banned");
+    private final String addedMessage = ModLogger.fileHandler.getMessage("added");
+    private final String defaultMessage = ModLogger.fileHandler.getMessage("default");
 
     public Webhook() {
         System.out.println("Webhook initialized");

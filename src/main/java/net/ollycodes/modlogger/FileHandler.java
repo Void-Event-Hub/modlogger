@@ -59,31 +59,11 @@ public class FileHandler {
         savePlayerRecord(playerRecord);
     }
 
-    public String getBannedMessage() {
-        URL bannedMessageFile = getClass().getClassLoader().getResource("webhook/banned.json");
-        if (bannedMessageFile == null) throw new RuntimeException("banned.json not found");
+    public String getMessage(String type) {
+        URL messageFile = getClass().getClassLoader().getResource("webhook/" + type + ".json");
+        if (messageFile == null) throw new RuntimeException(type + ".json not found");
         try {
-            return Files.readString(Path.of(bannedMessageFile.toURI()));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public String getAddedMessage() {
-        URL addedMessageFile = getClass().getClassLoader().getResource("webhook/added.json");
-        if (addedMessageFile == null) throw new RuntimeException("added.json not found");
-        try {
-            return Files.readString(Path.of(addedMessageFile.toURI()));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public String getDefaultMessage() {
-        URL defaultMessageFile = getClass().getClassLoader().getResource("webhook/default.json");
-        if (defaultMessageFile == null) throw new RuntimeException("default.json not found");
-        try {
-            return Files.readString(Path.of(defaultMessageFile.toURI()));
+            return Files.readString(Path.of(messageFile.toURI()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
