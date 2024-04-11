@@ -39,6 +39,8 @@ public class FileHandler {
     public void readConfig() throws IOException {
         config = gson.fromJson(Files.readString(configPath), Config.class);
         ModLogger.logger.debug("Loaded data from config file");
+        ModLogger.logger.debug("Banned mods: {}", config.bannedMods);
+        ModLogger.logger.debug("Default mods: {}", config.defaultMods);
     }
 
     public PlayerRecord getPlayerRecord(String uuid) throws IOException {
