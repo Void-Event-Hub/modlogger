@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.Connection;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -30,7 +32,13 @@ public class ModLogger {
         logger.info("ModLogger Enabled");
     }
 
-    public static void handleConnection(ConnectionData connection, GameProfile profile) throws IOException {
+    @SubscribeEvent
+    public void registerCommands(RegisterCommandsEvent event) {
+        MLCommand.register(event.getDispatcher());
+        logger.info("Registered commands");
+    }
+
+    public static void handleConnection(ConnectionData connection, GameProfile profile, CallbackInfoReturnable<Component> info) throws IOException {
         PlayerRecord.PlayerConnection playerConnection = new PlayerRecord.PlayerConnection();
         playerConnection.username = profile.getName();
         playerConnection.mods = connection.getModList();
