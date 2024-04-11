@@ -60,14 +60,14 @@ public class Webhook {
     }
 
     public void sendWebhook(String message) {
-        if (ModLogger.fileHandler.config.discordWebhook.isEmpty()) {
+        if (ModLogger.fileHandler.config.webhook.discordWebhook.isEmpty()) {
             ModLogger.logger.warn("No webhook configured");
             return;
         }
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(ModLogger.fileHandler.config.discordWebhook))
+                .uri(URI.create(ModLogger.fileHandler.config.webhook.discordWebhook))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(message))
                 .build();
