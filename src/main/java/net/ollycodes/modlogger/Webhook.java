@@ -15,10 +15,6 @@ public class Webhook {
     private final String addedMessage = ModLogger.fileHandler.getMessage("added");
     private final String defaultMessage = ModLogger.fileHandler.getMessage("default");
 
-    public Webhook() {
-        System.out.println("Webhook initialized");
-    }
-
     public String formatModsList(List<String> mods) {
         return "- " + String.join("\\n- ", mods);
     }
