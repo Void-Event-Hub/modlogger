@@ -15,8 +15,10 @@ public class Webhook {
     private final String addedMessage = ModLogger.fileHandler.getMessage("added");
     private final String defaultMessage = ModLogger.fileHandler.getMessage("default");
 
-    public String formatModsList(List<String> mods) {
-        return "- " + String.join("\\n- ", mods);
+    public String formatModsList(List<String> mods, boolean escapeNewLine) {
+        if (mods.isEmpty()) return "None";
+        if (escapeNewLine) return "- " + String.join("\\n- ", mods);
+        return "- " + String.join("\n- ", mods);
     }
 
     public String prepareMessage(String message, String uuid, String username, Date timestamp, List<String> defaultMods) {
@@ -36,8 +38,8 @@ public class Webhook {
         String message = prepareMessage(bannedMessage, uuid, username, timestamp, defaultMods)
             .replace("<BANNED_COUNT>", String.valueOf(bannedMods.size()))
             .replace("<ADDED_COUNT>", String.valueOf(addedMods.size()))
-            .replace("<BANNED_LIST>", formatModsList(bannedMods))
-            .replace("<ADDED_LIST>", formatModsList(addedMods));
+            .replace("<BANNED_LIST>", formatModsList(bannedMods, true))
+            .replace("<ADDED_LIST>", formatModsList(addedMods, true));
         sendWebhook(message);
     }
 
@@ -47,7 +49,7 @@ public class Webhook {
     ) {
         String message = prepareMessage(addedMessage, uuid, username, timestamp, defaultMods)
             .replace("<ADDED_COUNT>", String.valueOf(addedMods.size()))
-            .replace("<ADDED_LIST>", formatModsList(addedMods));
+            .replace("<ADDED_LIST>", formatModsList(addedMods, true));
         sendWebhook(message);
     }
 

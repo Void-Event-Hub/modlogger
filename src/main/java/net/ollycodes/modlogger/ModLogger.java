@@ -11,10 +11,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.ConnectionData;
 import org.slf4j.Logger;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.*;
+import java.util.List;
 
 @Mod("modlogger")
 public class ModLogger {
@@ -59,16 +63,44 @@ public class ModLogger {
             }
         });
 
-        if (!bannedMods.isEmpty() && fileHandler.config.webhookOnBanned) {
-            webhook.sendBannedMessage(
-                profile.getId().toString(), profile.getName(), playerConnection.timestamp,
-                defaultMods, addedMods, bannedMods
-            );
-        } else if (!addedMods.isEmpty() && fileHandler.config.webhookOnAdded) {
-            webhook.sendAddedMessage(
-                profile.getId().toString(), profile.getName(), playerConnection.timestamp, defaultMods, addedMods
-            );
-        } else if (fileHandler.config.webhookOnDefault) {
+        if (!bannedMods.isEmpty()) {
+            if (fileHandler.config.kick.onBanned) {
+                if (fileHandler.config.kick.showBannedMods) {
+                    info.setReturnValue(
+                        new TextComponent(fileHandler.config.kick.bannedMessageWithMods.replace(
+                            "%s", webhook.formatModsList(bannedMods, false)
+                        ))
+                    );
+                } else {
+                    info.setReturnValue(new TextComponent(fileHandler.config.kick.bannedMessage));
+                }
+            }
+            if (fileHandler.config.webhook.onBanned) {
+                webhook.sendBannedMessage(
+                    profile.getId().toString(), profile.getName(), playerConnection.timestamp,
+                    defaultMods, addedMods, bannedMods
+                );
+            }
+
+        } else if (!addedMods.isEmpty()) {
+            if (fileHandler.config.kick.onAdded) {
+                if (fileHandler.config.kick.showAddedMods) {
+                    info.setReturnValue(
+                            new TextComponent(fileHandler.config.kick.addedMessageWithMods.replace(
+                                "%s", webhook.formatModsList(addedMods, false)
+                            ))
+                    );
+                } else {
+                    info.setReturnValue(new TextComponent(fileHandler.config.kick.addedMessage));
+                }
+            }
+            if (fileHandler.config.webhook.onAdded) {
+                webhook.sendAddedMessage(
+                    profile.getId().toString(), profile.getName(), playerConnection.timestamp, defaultMods, addedMods
+                );
+            }
+
+        } else if (fileHandler.config.webhook.onDefault) {
             webhook.sendDefaultMessage(
                 profile.getId().toString(), profile.getName(), playerConnection.timestamp, defaultMods
             );
