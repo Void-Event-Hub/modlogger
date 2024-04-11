@@ -65,5 +65,7 @@ public class ModLogger {
                 profile.getId().toString(), profile.getName(), playerConnection.timestamp, defaultMods
             );
         }
+
+        ModLogger.logger.debug("Handled connection for {}", profile.getName());
     }
 }
