@@ -26,7 +26,7 @@ public class FileHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("FileHandler initialized");
+        ModLogger.logger.info("FileHandler initialized");
     }
 
     public void createConfig() throws IOException {
