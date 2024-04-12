@@ -27,5 +27,6 @@ public class Config {
         public String addedMessage = "You have been kicked for using additional mods. Please remove them and rejoin.";
         public String bannedMessageWithMods = "You have been kicked for using the following banned mods: %s Please remove them and rejoin.";
         public String addedMessageWithMods = "You have been kicked for using the following additional mods: %s Please remove them and rejoin.";
+        public List<String> playerWhitelist = new ArrayList<>();
     }
 }

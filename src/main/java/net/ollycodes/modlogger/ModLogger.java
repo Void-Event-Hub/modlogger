@@ -52,6 +52,7 @@ public class ModLogger {
         List<String> bannedMods = new ArrayList<>();
         List<String> addedMods = new ArrayList<>();
         List<String> defaultMods = new ArrayList<>();
+        boolean playerWhitelisted = fileHandler.config.kick.playerWhitelist.contains(profile.getName());
 
         connection.getModData().forEach((mod, data) -> {
             if (checkModList(fileHandler.config.bannedMods, mod)) {
@@ -64,7 +65,7 @@ public class ModLogger {
         });
 
         if (!bannedMods.isEmpty()) {
-            if (fileHandler.config.kick.onBanned) {
+            if (fileHandler.config.kick.onBanned && !playerWhitelisted) {
                 if (fileHandler.config.kick.showBannedMods) {
                     info.setReturnValue(
                         new TextComponent(fileHandler.config.kick.bannedMessageWithMods.replace(
@@ -78,12 +79,12 @@ public class ModLogger {
             if (fileHandler.config.webhook.onBanned) {
                 webhook.sendBannedMessage(
                     profile.getId().toString(), profile.getName(), playerConnection.timestamp,
-                    defaultMods, addedMods, bannedMods
+                    playerWhitelisted, defaultMods, addedMods, bannedMods
                 );
             }
 
         } else if (!addedMods.isEmpty()) {
-            if (fileHandler.config.kick.onAdded) {
+            if (fileHandler.config.kick.onAdded && !playerWhitelisted) {
                 if (fileHandler.config.kick.showAddedMods) {
                     info.setReturnValue(
                             new TextComponent(fileHandler.config.kick.addedMessageWithMods.replace(
@@ -96,7 +97,8 @@ public class ModLogger {
             }
             if (fileHandler.config.webhook.onAdded) {
                 webhook.sendAddedMessage(
-                    profile.getId().toString(), profile.getName(), playerConnection.timestamp, defaultMods, addedMods
+                    profile.getId().toString(), profile.getName(), playerConnection.timestamp,
+                    playerWhitelisted, defaultMods, addedMods
                 );
             }
 

@@ -32,7 +32,7 @@ public class Webhook {
     }
 
     public void sendBannedMessage(
-        String uuid, String username, Date timestamp,
+        String uuid, String username, Date timestamp, boolean playerWhitelisted,
         List<String> defaultMods, List<String> addedMods, List<String> bannedMods
     ) {
         String action = ModLogger.fileHandler.config.kick.onBanned ? "Kicked" : "None";
@@ -41,26 +41,23 @@ public class Webhook {
             .replace("<ADDED_COUNT>", String.valueOf(addedMods.size()))
             .replace("<BANNED_LIST>", formatModsList(bannedMods, true))
             .replace("<ADDED_LIST>", formatModsList(addedMods, true))
-            .replace("<ACTION>", action);
+            .replace("<ACTION>", playerWhitelisted ? "None (whitelisted)" : action);
         sendWebhook(message);
     }
 
     public void sendAddedMessage(
-        String uuid, String username, Date timestamp,
+        String uuid, String username, Date timestamp, boolean playerWhitelisted,
         List<String> defaultMods, List<String> addedMods
     ) {
         String action = ModLogger.fileHandler.config.kick.onAdded ? "Kicked" : "None";
         String message = prepareMessage(addedMessage, uuid, username, timestamp, defaultMods)
             .replace("<ADDED_COUNT>", String.valueOf(addedMods.size()))
             .replace("<ADDED_LIST>", formatModsList(addedMods, true))
-            .replace("<ACTION>", action);
+            .replace("<ACTION>", playerWhitelisted ? "None (whitelisted)" : action);
         sendWebhook(message);
     }
 
-    public void sendDefaultMessage(
-        String uuid, String username, Date timestamp,
-        List<String> defaultMods
-    ) {
+    public void sendDefaultMessage(String uuid, String username, Date timestamp, List<String> defaultMods) {
         String message = prepareMessage(defaultMessage, uuid, username, timestamp, defaultMods);
         sendWebhook(message);
     }
