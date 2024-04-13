@@ -3,8 +3,10 @@ package net.ollycodes.modlogger;
 import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.Connection;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -26,6 +28,7 @@ public class ModLogger {
     public static Map<SocketAddress, Connection> profiles = new HashMap<>();
     public static FileHandler fileHandler = new FileHandler();
     public static Webhook webhook = new Webhook();
+    public static MinecraftServer server;
 
     public ModLogger() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -34,6 +37,12 @@ public class ModLogger {
 
     private void setup(final FMLCommonSetupEvent event) {
         logger.info("ModLogger Enabled");
+    }
+
+    @SubscribeEvent
+    public void serverStarting(ServerStartingEvent event) {
+        server = event.getServer();
+        logger.info("Registered server: {}", server);
     }
 
     @SubscribeEvent
@@ -52,7 +61,12 @@ public class ModLogger {
         List<String> bannedMods = new ArrayList<>();
         List<String> addedMods = new ArrayList<>();
         List<String> defaultMods = new ArrayList<>();
-        boolean playerWhitelisted = fileHandler.config.kick.playerWhitelist.contains(profile.getName());
+        boolean playerWhitelisted = (
+            fileHandler.config.kick.playerWhitelist.contains(profile.getName()) || (
+                fileHandler.config.bypassKickPermissionLevel != -1
+                && server.getProfilePermissions(profile) >= fileHandler.config.bypassKickPermissionLevel
+            )
+        );
 
         connection.getModData().forEach((mod, data) -> {
             if (checkModList(fileHandler.config.bannedMods, mod)) {

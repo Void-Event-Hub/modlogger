@@ -22,7 +22,7 @@ public class FileHandler {
         try {
             Files.createDirectories(playersDirectory);
             createConfig();
-            readConfig();
+            loadConfig();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -36,11 +36,16 @@ public class FileHandler {
         ModLogger.logger.debug("Created config file");
     }
 
-    public void readConfig() throws IOException {
+    public void loadConfig() throws IOException {
         config = gson.fromJson(Files.readString(configPath), Config.class);
         ModLogger.logger.debug("Loaded data from config file");
         ModLogger.logger.debug("Banned mods: {}", config.bannedMods);
         ModLogger.logger.debug("Default mods: {}", config.defaultMods);
+    }
+
+    public void saveConfig() throws IOException {
+        Files.writeString(configPath, gson.toJson(config));
+        ModLogger.logger.debug("Saved data to config file");
     }
 
     public PlayerRecord getPlayerRecord(String uuid) throws IOException {

@@ -7,7 +7,8 @@ public class Config {
     public List<String> bannedMods = new ArrayList<>();
     public List<String> defaultMods = new ArrayList<>();
     public boolean matchExactModName = false;
-    public int reloadCommandPermissionLevel = 4;
+    public int commandPermissionLevel = 4;
+    public int bypassKickPermissionLevel = 4;
 
     public WebhookConfig webhook = new WebhookConfig();
     public KickConfig kick = new KickConfig();
