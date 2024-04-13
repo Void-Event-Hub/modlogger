@@ -9,6 +9,7 @@ The config file is located at `config/modlogger/config.json`. The following opti
 - `bannedMods`: An array of mod IDs that are not allowed on the server.
 - `defaultMods`: An array of mod IDs that are expected on the client.
 - `matchExactModName`: Whether to match the exact mod name when checking for banned mods. If this is set to false, any mod ID that contains the banned mod ID will be detected.
+- `reloadCommandPermissionLevel`: The permission level required to run the `/modlogger reload` command. Set to -1 to disable the command.
 - `webhook`: The configuration for Discord webhooks.
   - `discordWebhook`: The URL of the Discord webhook to send messages to. If this is not set, Discord messages will not be sent.
   - `onBanned`: Whether to send a Discord message when a banned mod is detected.

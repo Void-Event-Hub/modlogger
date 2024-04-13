@@ -16,7 +16,8 @@ public class MLCommand {
     }
 
     private static int reload(CommandContext<CommandSourceStack> command) {
-        if (!command.getSource().hasPermission(4)) return 0;
+        if (ModLogger.fileHandler.config.reloadCommandPermissionLevel == -1) return 0;
+        if (!command.getSource().hasPermission(ModLogger.fileHandler.config.reloadCommandPermissionLevel)) return 0;
         TextComponent message;
         try {
             ModLogger.fileHandler.readConfig();
