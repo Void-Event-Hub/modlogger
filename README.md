@@ -12,6 +12,7 @@ Downloads are available on the [releases page](https://github.com/olly007opm/Mod
 The config file is located at `config/modlogger/config.json`. The following options are available:
 - `bannedMods`: An array of mod IDs that are not allowed on the server.
 - `defaultMods`: An array of mod IDs that are expected on the client.
+- `ignoredMods`: An array of mod IDs that are ignored.
 - `matchExactModName`: Whether to match the exact mod name when checking for banned mods. If this is set to false, any mod ID that contains the banned mod ID will be detected.
 - `commandPermissionLevel`: The permission level required to run ModLogger commands. Set to -1 to disable commands.
 - `bypassKickPermissionLevel`: The permission level required to bypass kicks. Set to -1 to disable.
