@@ -21,7 +21,7 @@
                 },
                 {
                     "name": "Mod Count",
-                    "value": "<DEFAULT_COUNT>/<DEFAULT_TOTAL> default mods"
+                    "value": "<DEFAULT_COUNT>/<DEFAULT_TOTAL> default mods\n<IGNORED_COUNT> ignored mods"
                 }
             ],
             "thumbnail": {

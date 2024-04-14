@@ -6,6 +6,7 @@ import java.util.List;
 public class Config {
     public List<String> bannedMods = new ArrayList<>();
     public List<String> defaultMods = new ArrayList<>();
+    public List<String> ignoredMods = new ArrayList<>();
     public boolean matchExactModName = false;
     public int commandPermissionLevel = 4;
     public int bypassKickPermissionLevel = 4;

@@ -61,6 +61,7 @@ public class ModLogger {
         List<String> bannedMods = new ArrayList<>();
         List<String> addedMods = new ArrayList<>();
         List<String> defaultMods = new ArrayList<>();
+        List<String> ignoredMods = new ArrayList<>();
         boolean playerWhitelisted = (
             fileHandler.config.kick.playerWhitelist.contains(profile.getName()) || (
                 fileHandler.config.bypassKickPermissionLevel != -1
@@ -73,6 +74,8 @@ public class ModLogger {
                 bannedMods.add(mod);
             } else if (checkModList(fileHandler.config.defaultMods, mod)) {
                 defaultMods.add(mod);
+            } else if (checkModList(fileHandler.config.ignoredMods, mod)) {
+                ignoredMods.add(mod);
             } else {
                 addedMods.add(mod);
             }
@@ -93,7 +96,7 @@ public class ModLogger {
             if (fileHandler.config.webhook.onBanned) {
                 webhook.sendBannedMessage(
                     profile.getId().toString(), profile.getName(), playerConnection.timestamp,
-                    playerWhitelisted, defaultMods, addedMods, bannedMods
+                    playerWhitelisted, defaultMods, ignoredMods, addedMods, bannedMods
                 );
             }
 
@@ -112,13 +115,13 @@ public class ModLogger {
             if (fileHandler.config.webhook.onAdded) {
                 webhook.sendAddedMessage(
                     profile.getId().toString(), profile.getName(), playerConnection.timestamp,
-                    playerWhitelisted, defaultMods, addedMods
+                    playerWhitelisted, defaultMods, ignoredMods, addedMods
                 );
             }
 
         } else if (fileHandler.config.webhook.onDefault) {
             webhook.sendDefaultMessage(
-                profile.getId().toString(), profile.getName(), playerConnection.timestamp, defaultMods
+                profile.getId().toString(), profile.getName(), playerConnection.timestamp, defaultMods, ignoredMods
             );
         }
 
