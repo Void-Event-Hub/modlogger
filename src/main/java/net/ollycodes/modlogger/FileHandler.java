@@ -23,6 +23,7 @@ public class FileHandler {
             Files.createDirectories(playersDirectory);
             createConfig();
             loadConfig();
+            saveConfig();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
