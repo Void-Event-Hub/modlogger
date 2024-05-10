@@ -13,6 +13,7 @@ The config file is located at `config/modlogger/config.json`. The following opti
 - `bannedMods`: An array of mod IDs that are not allowed on the server.
 - `defaultMods`: An array of mod IDs that are expected on the client.
 - `ignoredMods`: An array of mod IDs that are ignored.
+- `requiredMods`: An array of mod IDs that are required.
 - `matchExactModName`: Whether to match the exact mod name when checking for banned mods. If this is set to false, any mod ID that contains the banned mod ID will be detected.
 - `commandPermissionLevel`: The permission level required to run ModLogger commands. Set to -1 to disable commands.
 - `bypassKickPermissionLevel`: The permission level required to bypass kicks. Set to -1 to disable.
@@ -21,15 +22,20 @@ The config file is located at `config/modlogger/config.json`. The following opti
   - `onBanned`: Whether to send a Discord message when a banned mod is detected.
   - `onAdded`: Whether to send a Discord message when a mod is detected that is not in the default mods list.
   - `onDefault`: Whether to send a Discord message when the mods list matches the default mods.
+  - `onRequired`: Whether to send a Discord message when a required mod is missing.
 - `kick`: The configuration for kicking players.
   - `onBanned`: Whether to kick players when a banned mod is detected.
   - `onAdded`: Whether to kick players when a mod is detected that is not in the default mods list.
+  - `onRequired`: Whether to kick players when a required mod is missing.
   - `showBannedMods`: Whether to show the banned mods in the kick message.
   - `showAddedMods`: Whether to show the added mods in the kick message.
+  - `showRequiredMods`: Whether to show the required mods in the kick message.
   - `bannedMessage`: The message to show when a player is kicked for using banned mods.
   - `addedMessage`: The message to show when a player is kicked for using additional mods.
+  - `requiredMessage`: The message to show when a player is kicked for missing required mods.
   - `bannedMessageWithMods`: The message to show when a player is kicked for using banned mods, with the list of banned mods.
   - `addedMessageWithMods`: The message to show when a player is kicked for using additional mods, with the list of additional mods.
+  - `requiredMessageWithMods`: The message to show when a player is kicked for missing required mods, with the list of required mods.
   - `playerWhitelist`: An array of player usernames that are exempt from being kicked.
 
 ## Join Data

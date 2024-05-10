@@ -2,7 +2,7 @@
     "content": null,
     "embeds": [
         {
-            "title": "Additional Mods Detected",
+            "title": "Required Mods Missing",
             "color": 16096779,
             "fields": [
                 {
@@ -21,7 +21,7 @@
                 },
                 {
                     "name": "Mod Count",
-                    "value": "<ADDED_COUNT> added mods\n<REQUIRED_COUNT>/<REQUIRED_TOTAL> required mods\n<DEFAULT_COUNT>/<DEFAULT_TOTAL> default mods\n<IGNORED_COUNT> ignored mods",
+                    "value": "<REQUIRED_COUNT>/<REQUIRED_TOTAL> required mods\n<DEFAULT_COUNT>/<DEFAULT_TOTAL> default mods\n<IGNORED_COUNT> ignored mods",
                     "inline": true
                 },
                 {
@@ -30,8 +30,8 @@
                     "inline": true
                 },
                 {
-                    "name": "Added Mods",
-                    "value": "<ADDED_LIST>"
+                    "name": "Missing Mods",
+                    "value": "<REQUIRED_LIST>"
                 }
             ],
             "thumbnail": {

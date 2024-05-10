@@ -14,6 +14,7 @@ public class Webhook {
     private final String bannedMessage = ModLogger.fileHandler.getMessage("banned");
     private final String addedMessage = ModLogger.fileHandler.getMessage("added");
     private final String defaultMessage = ModLogger.fileHandler.getMessage("default");
+    private final String requiredMessage = ModLogger.fileHandler.getMessage("required");
 
     public String formatModsList(List<String> mods, boolean escapeNewLine) {
         if (mods.isEmpty()) return "None";
@@ -32,7 +33,23 @@ public class Webhook {
             .replace("<UUID>", uuid)
             .replace("<DEFAULT_COUNT>", String.valueOf(defaultMods.size()))
             .replace("<DEFAULT_TOTAL>", String.valueOf(ModLogger.fileHandler.config.defaultMods.size()))
+            .replace("<REQUIRED_COUNT>", String.valueOf(ModLogger.fileHandler.config.requiredMods.size()))
+            .replace("<REQUIRED_TOTAL>", String.valueOf(ModLogger.fileHandler.config.requiredMods.size()))
             .replace("<IGNORED_COUNT>", String.valueOf(ignoredMods.size()));
+    }
+
+    public void sendRequiredMessage(
+        String uuid, String username, Date timestamp, boolean playerWhitelisted,
+        List<String> defaultMods, List<String> ignoredMods, List<String> requiredMods
+    ) {
+        String action = ModLogger.fileHandler.config.kick.onRequired ? "Kicked" : "None";
+        String message = requiredMessage.replace("<REQUIRED_COUNT>", String.valueOf(
+                ModLogger.fileHandler.config.requiredMods.size() - requiredMods.size()
+        ));
+        message = prepareMessage(message, uuid, username, timestamp, defaultMods, ignoredMods)
+                .replace("<ACTION>", playerWhitelisted ? "None (whitelisted)" : action)
+                .replace("<REQUIRED_LIST>", formatModsList(requiredMods, true));
+        sendWebhook(message);
     }
 
     public void sendBannedMessage(

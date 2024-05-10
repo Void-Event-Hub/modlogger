@@ -21,7 +21,7 @@
                 },
                 {
                     "name": "Mod Count",
-                    "value": "<BANNED_COUNT> banned mods\n<ADDED_COUNT> added mods\n<DEFAULT_COUNT>/<DEFAULT_TOTAL> default mods\n<IGNORED_COUNT> ignored mods",
+                    "value": "<BANNED_COUNT> banned mods\n<ADDED_COUNT> added mods\n<REQUIRED_COUNT>/<REQUIRED_TOTAL> required mods\n<DEFAULT_COUNT>/<DEFAULT_TOTAL> default mods\n<IGNORED_COUNT> ignored mods",
                     "inline": true
                 },
                 {

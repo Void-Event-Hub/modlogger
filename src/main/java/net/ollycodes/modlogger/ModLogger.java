@@ -58,6 +58,7 @@ public class ModLogger {
         playerConnection.timestamp = new Date();
         fileHandler.logConnection(profile.getId().toString(), playerConnection);
 
+        List<String> requiredMods = new ArrayList<>(fileHandler.config.requiredMods);
         List<String> bannedMods = new ArrayList<>();
         List<String> addedMods = new ArrayList<>();
         List<String> defaultMods = new ArrayList<>();
@@ -70,7 +71,9 @@ public class ModLogger {
         );
 
         connection.getModData().forEach((mod, data) -> {
-            if (checkModList(fileHandler.config.bannedMods, mod)) {
+            if (requiredMods.contains(mod)) {
+                requiredMods.remove(mod);
+            } else if (checkModList(fileHandler.config.bannedMods, mod)) {
                 bannedMods.add(mod);
             } else if (checkModList(fileHandler.config.defaultMods, mod)) {
                 defaultMods.add(mod);
@@ -81,7 +84,26 @@ public class ModLogger {
             }
         });
 
-        if (!bannedMods.isEmpty()) {
+        if (!requiredMods.isEmpty()) {
+            if (fileHandler.config.kick.onRequired && !playerWhitelisted) {
+                if (fileHandler.config.kick.showRequiredMods) {
+                    info.setReturnValue(
+                            new TextComponent(fileHandler.config.kick.requiredMessageWithMods.replace(
+                                    "%s", webhook.formatModsList(requiredMods, false)
+                            ))
+                    );
+                } else {
+                    info.setReturnValue(new TextComponent(fileHandler.config.kick.requiredMessage));
+                }
+            }
+            if (fileHandler.config.webhook.onRequired) {
+                webhook.sendRequiredMessage(
+                        profile.getId().toString(), profile.getName(), playerConnection.timestamp,
+                        playerWhitelisted, defaultMods, ignoredMods, requiredMods
+                );
+            }
+
+        } else if (!bannedMods.isEmpty()) {
             if (fileHandler.config.kick.onBanned && !playerWhitelisted) {
                 if (fileHandler.config.kick.showBannedMods) {
                     info.setReturnValue(

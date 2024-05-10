@@ -41,6 +41,7 @@ public class FileHandler {
         config = gson.fromJson(Files.readString(configPath), Config.class);
         ModLogger.logger.debug("Loaded data from config file");
         ModLogger.logger.debug("Banned mods: {}", config.bannedMods);
+        ModLogger.logger.debug("Required mods: {}", config.requiredMods);
         ModLogger.logger.debug("Default mods: {}", config.defaultMods);
     }
 

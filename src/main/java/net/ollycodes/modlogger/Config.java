@@ -7,6 +7,7 @@ public class Config {
     public List<String> bannedMods = new ArrayList<>();
     public List<String> defaultMods = new ArrayList<>();
     public List<String> ignoredMods = new ArrayList<>();
+    public List<String> requiredMods = new ArrayList<>();
     public boolean matchExactModName = false;
     public int commandPermissionLevel = 4;
     public int bypassKickPermissionLevel = 4;
@@ -19,17 +20,22 @@ public class Config {
         public boolean onBanned = true;
         public boolean onAdded = true;
         public boolean onDefault = true;
+        public boolean onRequired = true;
     }
 
     public static class KickConfig {
         public boolean onBanned = false;
         public boolean onAdded = false;
-        public boolean showBannedMods = false;
-        public boolean showAddedMods = false;
+        public boolean onRequired = false;
+        public boolean showBannedMods = true;
+        public boolean showAddedMods = true;
+        public boolean showRequiredMods = true;
         public String bannedMessage = "You have been kicked for using banned mods. Please remove them and rejoin.";
         public String addedMessage = "You have been kicked for using additional mods. Please remove them and rejoin.";
+        public String requiredMessage = "You have been kicked for removing required mods. Please re-add them and rejoin.";
         public String bannedMessageWithMods = "You have been kicked for using the following banned mods: %s Please remove them and rejoin.";
         public String addedMessageWithMods = "You have been kicked for using the following additional mods: %s Please remove them and rejoin.";
+        public String requiredMessageWithMods = "You have been kicked for removing the following required mods: %s Please re-add them and rejoin.";
         public List<String> playerWhitelist = new ArrayList<>();
     }
 }
