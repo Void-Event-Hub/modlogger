@@ -1,10 +1,14 @@
 package net.ollycodes.modlogger;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -92,16 +96,21 @@ public class Webhook {
             return;
         }
 
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(ModLogger.fileHandler.config.webhook.discordWebhook))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(message))
-                .build();
         try {
-            client.send(request, HttpResponse.BodyHandlers.ofString());
-            ModLogger.logger.debug("Sent message to webhook");
-        } catch (IOException | InterruptedException e) {
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpPost request = new HttpPost(ModLogger.fileHandler.config.webhook.discordWebhook);
+            request.setHeader("Content-Type", "application/json");
+            StringEntity params = new StringEntity(message);
+            request.setEntity(params);
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    ModLogger.logger.info("Got response: {}", EntityUtils.toString(entity));
+                    EntityUtils.consume(entity);
+                }
+            }
+
+        } catch (IOException e) {
             ModLogger.logger.error("Failed to send webhook", e);
         }
     }

@@ -3,15 +3,17 @@ package net.ollycodes.modlogger;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FileHandler {
-    Path configPath = Path.of("config/modlogger/config.json").toAbsolutePath();
-    Path playersDirectory = Path.of("config/modlogger/players").toAbsolutePath();
+    Path configPath = Paths.get("config/modlogger/config.json").toAbsolutePath();
+    Path playersDirectory = Paths.get("config/modlogger/players").toAbsolutePath();
     Gson gson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
             .setDateFormat("yyyy-MM-dd hh:mm:ss.S")
@@ -33,12 +35,12 @@ public class FileHandler {
     public void createConfig() throws IOException {
         if (Files.exists(configPath)) return;
         Files.createFile(configPath);
-        Files.writeString(configPath, gson.toJson(new Config()));
+        FileUtils.writeStringToFile(configPath.toFile(), gson.toJson(new Config()), "UTF-8");
         ModLogger.logger.debug("Created config file");
     }
 
     public void loadConfig() throws IOException {
-        config = gson.fromJson(Files.readString(configPath), Config.class);
+        config = gson.fromJson(FileUtils.readFileToString(configPath.toFile(), "UTF-8"), Config.class);
         ModLogger.logger.debug("Loaded data from config file");
         ModLogger.logger.debug("Banned mods: {}", config.bannedMods);
         ModLogger.logger.debug("Required mods: {}", config.requiredMods);
@@ -46,7 +48,7 @@ public class FileHandler {
     }
 
     public void saveConfig() throws IOException {
-        Files.writeString(configPath, gson.toJson(config));
+        FileUtils.writeStringToFile(configPath.toFile(), gson.toJson(config), "UTF-8");
         ModLogger.logger.debug("Saved data to config file");
     }
 
@@ -54,7 +56,7 @@ public class FileHandler {
         Path playerRecordPath = playersDirectory.resolve(uuid + ".json");
         if (Files.exists(playerRecordPath)) {
             ModLogger.logger.debug("Fetched existing player record for {}", uuid);
-            return gson.fromJson(Files.readString(playerRecordPath), PlayerRecord.class);
+            return gson.fromJson(FileUtils.readFileToString(playerRecordPath.toFile(), "UTF-8"), PlayerRecord.class);
         } else {
             ModLogger.logger.debug("Created new player record for {}", uuid);
             return new PlayerRecord(uuid);
@@ -63,7 +65,7 @@ public class FileHandler {
 
     public void savePlayerRecord(PlayerRecord playerRecord) throws IOException {
         Path playerRecordPath = playersDirectory.resolve(playerRecord.uuid + ".json");
-        Files.writeString(playerRecordPath, gson.toJson(playerRecord));
+        FileUtils.writeStringToFile(playerRecordPath.toFile(), gson.toJson(playerRecord), "UTF-8");
         ModLogger.logger.debug("Saved player record for {}", playerRecord.uuid);
     }
 
@@ -78,7 +80,7 @@ public class FileHandler {
         URL messageFile = getClass().getClassLoader().getResource("webhook/" + type + ".json");
         if (messageFile == null) throw new RuntimeException(type + ".json not found");
         try {
-            return Files.readString(Path.of(messageFile.toURI()));
+            return FileUtils.readFileToString(Paths.get(messageFile.toURI()).toFile(), "UTF-8");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

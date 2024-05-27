@@ -1,31 +1,30 @@
 package net.ollycodes.modlogger;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.logging.LogUtils;
-import net.minecraft.network.Connection;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.ConnectionData;
-import org.slf4j.Logger;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraftforge.fml.network.NetworkHooks;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.net.SocketAddress;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Mod("modlogger")
 public class ModLogger {
-    public static final Logger logger = LogUtils.getLogger();
-    public static Map<SocketAddress, Connection> profiles = new HashMap<>();
+    public static final Logger logger = LogManager.getLogger();
     public static FileHandler fileHandler = new FileHandler();
     public static Webhook webhook = new Webhook();
     public static MinecraftServer server;
@@ -40,7 +39,7 @@ public class ModLogger {
     }
 
     @SubscribeEvent
-    public void serverStarting(ServerStartingEvent event) {
+    public void serverStarting(FMLServerStartingEvent event) {
         server = event.getServer();
         logger.info("Registered server: {}", server);
     }
@@ -51,12 +50,18 @@ public class ModLogger {
         logger.info("Registered commands");
     }
 
-    public static void handleConnection(ConnectionData connection, GameProfile profile, CallbackInfoReturnable<Component> info) throws IOException {
+    @SubscribeEvent
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) throws IOException {
+        ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+        ImmutableList<String> mods = Objects.requireNonNull(
+            NetworkHooks.getConnectionData(player.connection.getConnection())
+        ).getModList();
+
         PlayerRecord.PlayerConnection playerConnection = new PlayerRecord.PlayerConnection();
-        playerConnection.username = profile.getName();
-        playerConnection.mods = connection.getModList();
+        playerConnection.username = player.getName().getString();
+        playerConnection.mods = mods;
         playerConnection.timestamp = new Date();
-        fileHandler.logConnection(profile.getId().toString(), playerConnection);
+        fileHandler.logConnection(player.getUUID().toString(), playerConnection);
 
         List<String> requiredMods = new ArrayList<>(fileHandler.config.requiredMods);
         List<String> bannedMods = new ArrayList<>();
@@ -64,13 +69,13 @@ public class ModLogger {
         List<String> defaultMods = new ArrayList<>();
         List<String> ignoredMods = new ArrayList<>();
         boolean playerWhitelisted = (
-            fileHandler.config.kick.playerWhitelist.contains(profile.getName()) || (
-                fileHandler.config.bypassKickPermissionLevel != -1
-                && server.getProfilePermissions(profile) >= fileHandler.config.bypassKickPermissionLevel
-            )
+                fileHandler.config.kick.playerWhitelist.contains(player.getName().getString()) || (
+                    fileHandler.config.bypassKickPermissionLevel != -1
+                    && server.getProfilePermissions(player.getGameProfile()) >= fileHandler.config.bypassKickPermissionLevel
+                )
         );
 
-        connection.getModData().forEach((mod, data) -> {
+        mods.forEach(mod -> {
             if (requiredMods.contains(mod)) {
                 requiredMods.remove(mod);
             } else if (checkModList(fileHandler.config.bannedMods, mod)) {
@@ -87,37 +92,37 @@ public class ModLogger {
         if (!requiredMods.isEmpty()) {
             if (fileHandler.config.kick.onRequired && !playerWhitelisted) {
                 if (fileHandler.config.kick.showRequiredMods) {
-                    info.setReturnValue(
-                            new TextComponent(fileHandler.config.kick.requiredMessageWithMods.replace(
-                                    "%s", webhook.formatModsList(requiredMods, false)
-                            ))
+                    player.connection.disconnect(
+                        new StringTextComponent(fileHandler.config.kick.requiredMessageWithMods.replace(
+                            "%s", webhook.formatModsList(requiredMods, false)
+                        ))
                     );
                 } else {
-                    info.setReturnValue(new TextComponent(fileHandler.config.kick.requiredMessage));
+                    player.connection.disconnect(new StringTextComponent(fileHandler.config.kick.requiredMessage));
                 }
             }
             if (fileHandler.config.webhook.onRequired) {
                 webhook.sendRequiredMessage(
-                        profile.getId().toString(), profile.getName(), playerConnection.timestamp,
-                        playerWhitelisted, defaultMods, ignoredMods, requiredMods
+                    player.getStringUUID(), player.getName().getString(), playerConnection.timestamp,
+                    playerWhitelisted, defaultMods, ignoredMods, requiredMods
                 );
             }
 
         } else if (!bannedMods.isEmpty()) {
             if (fileHandler.config.kick.onBanned && !playerWhitelisted) {
                 if (fileHandler.config.kick.showBannedMods) {
-                    info.setReturnValue(
-                        new TextComponent(fileHandler.config.kick.bannedMessageWithMods.replace(
+                    player.connection.disconnect(
+                        new StringTextComponent(fileHandler.config.kick.bannedMessageWithMods.replace(
                             "%s", webhook.formatModsList(bannedMods, false)
                         ))
                     );
                 } else {
-                    info.setReturnValue(new TextComponent(fileHandler.config.kick.bannedMessage));
+                    player.connection.disconnect(new StringTextComponent(fileHandler.config.kick.bannedMessage));
                 }
             }
             if (fileHandler.config.webhook.onBanned) {
                 webhook.sendBannedMessage(
-                    profile.getId().toString(), profile.getName(), playerConnection.timestamp,
+                    player.getStringUUID(), player.getName().getString(), playerConnection.timestamp,
                     playerWhitelisted, defaultMods, ignoredMods, addedMods, bannedMods
                 );
             }
@@ -125,29 +130,30 @@ public class ModLogger {
         } else if (!addedMods.isEmpty()) {
             if (fileHandler.config.kick.onAdded && !playerWhitelisted) {
                 if (fileHandler.config.kick.showAddedMods) {
-                    info.setReturnValue(
-                            new TextComponent(fileHandler.config.kick.addedMessageWithMods.replace(
-                                "%s", webhook.formatModsList(addedMods, false)
-                            ))
+                    player.connection.disconnect(
+                        new StringTextComponent(fileHandler.config.kick.addedMessageWithMods.replace(
+                            "%s", webhook.formatModsList(addedMods, false)
+                        ))
                     );
                 } else {
-                    info.setReturnValue(new TextComponent(fileHandler.config.kick.addedMessage));
+                    player.connection.disconnect(new StringTextComponent(fileHandler.config.kick.addedMessage));
                 }
             }
             if (fileHandler.config.webhook.onAdded) {
                 webhook.sendAddedMessage(
-                    profile.getId().toString(), profile.getName(), playerConnection.timestamp,
+                    player.getStringUUID(), player.getName().getString(), playerConnection.timestamp,
                     playerWhitelisted, defaultMods, ignoredMods, addedMods
                 );
             }
 
         } else if (fileHandler.config.webhook.onDefault) {
             webhook.sendDefaultMessage(
-                profile.getId().toString(), profile.getName(), playerConnection.timestamp, defaultMods, ignoredMods
+                player.getStringUUID(), player.getName().getString(), playerConnection.timestamp,
+                defaultMods, ignoredMods
             );
         }
 
-        ModLogger.logger.debug("Handled connection for {}", profile.getName());
+        ModLogger.logger.debug("Handled connection for {}", player.getName().getString());
     }
 
     public static boolean checkModList(List<String> modList, String mod) {
