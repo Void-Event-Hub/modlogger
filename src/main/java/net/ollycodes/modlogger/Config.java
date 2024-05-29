@@ -11,6 +11,7 @@ public class Config {
     public boolean matchExactModName = false;
     public int commandPermissionLevel = 4;
     public int bypassKickPermissionLevel = 4;
+    public List<String> playerWhitelist = new ArrayList<>();
 
     public WebhookConfig webhook = new WebhookConfig();
     public KickConfig kick = new KickConfig();
@@ -36,6 +37,5 @@ public class Config {
         public String bannedMessageWithMods = "You have been kicked for using the following banned mods: %s Please remove them and rejoin.";
         public String addedMessageWithMods = "You have been kicked for using the following additional mods: %s Please remove them and rejoin.";
         public String requiredMessageWithMods = "You have been kicked for removing the following required mods: %s Please re-add them and rejoin.";
-        public List<String> playerWhitelist = new ArrayList<>();
     }
 }

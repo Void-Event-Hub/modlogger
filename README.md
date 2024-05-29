@@ -17,6 +17,7 @@ The config file is located at `config/modlogger/config.json`. The following opti
 - `matchExactModName`: Whether to match the exact mod name when checking for banned mods. If this is set to false, any mod ID that contains the banned mod ID will be detected.
 - `commandPermissionLevel`: The permission level required to run ModLogger commands. Set to -1 to disable commands.
 - `bypassKickPermissionLevel`: The permission level required to bypass kicks. Set to -1 to disable.
+- `playerWhitelist`: An array of player usernames that are exempt from being kicked or banned.
 - `webhook`: The configuration for Discord webhooks.
   - `discordWebhook`: The URL of the Discord webhook to send messages to. If this is not set, Discord messages will not be sent.
   - `onBanned`: Whether to send a Discord message when a banned mod is detected.
@@ -36,7 +37,6 @@ The config file is located at `config/modlogger/config.json`. The following opti
   - `bannedMessageWithMods`: The message to show when a player is kicked for using banned mods, with the list of banned mods.
   - `addedMessageWithMods`: The message to show when a player is kicked for using additional mods, with the list of additional mods.
   - `requiredMessageWithMods`: The message to show when a player is kicked for missing required mods, with the list of required mods.
-  - `playerWhitelist`: An array of player usernames that are exempt from being kicked.
 
 ## Join Data
 The mods list of every join attempt is logged under `config/modlogger/players/<uuid>.json`, where `<uuid>` is the UUID of the player.
