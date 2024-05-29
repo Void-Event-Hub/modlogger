@@ -15,6 +15,7 @@ public class Config {
 
     public WebhookConfig webhook = new WebhookConfig();
     public KickConfig kick = new KickConfig();
+    public BanConfig ban = new BanConfig();
 
     public static class WebhookConfig {
         public String discordWebhook = "";
@@ -37,5 +38,10 @@ public class Config {
         public String bannedMessageWithMods = "You have been kicked for using the following banned mods:\n%s\nPlease remove them and rejoin.";
         public String addedMessageWithMods = "You have been kicked for using the following additional mods:\n%s\nPlease remove them and rejoin.";
         public String requiredMessageWithMods = "You have been kicked for removing the following required mods:\n%s\nPlease re-add them and rejoin.";
+    }
+
+    public static class BanConfig {
+        public boolean onBanned = false;
+        public String banMessage = "You have been banned for using the following disallowed mods:\n%s\nPlease open a ticket on Discord if you believe this is a mistake.";
     }
 }

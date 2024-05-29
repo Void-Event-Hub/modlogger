@@ -37,6 +37,9 @@ The config file is located at `config/modlogger/config.json`. The following opti
   - `bannedMessageWithMods`: The message to show when a player is kicked for using banned mods, with the list of banned mods.
   - `addedMessageWithMods`: The message to show when a player is kicked for using additional mods, with the list of additional mods.
   - `requiredMessageWithMods`: The message to show when a player is kicked for missing required mods, with the list of required mods.
+- `ban`: The configuration for banning players.
+  - `onBanned`: Whether to ban players when a banned mod is detected.
+  - `banMessage`: The message to show when a player is banned for using banned mods.
 
 ## Join Data
 The mods list of every join attempt is logged under `config/modlogger/players/<uuid>.json`, where `<uuid>` is the UUID of the player.

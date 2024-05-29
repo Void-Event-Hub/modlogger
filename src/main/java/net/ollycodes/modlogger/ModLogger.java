@@ -3,6 +3,8 @@ package net.ollycodes.modlogger;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.BanList;
+import net.minecraft.server.management.ProfileBanEntry;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -109,7 +111,17 @@ public class ModLogger {
             }
 
         } else if (!bannedMods.isEmpty()) {
-            if (fileHandler.config.kick.onBanned && !playerWhitelisted) {
+            if (!playerWhitelisted && fileHandler.config.ban.onBanned) {
+                    BanList banList = server.getPlayerList().getBans();
+                    String banMessage = fileHandler.config.ban.banMessage.replace(
+                        "%s", webhook.formatModsList(bannedMods, false)
+                    );
+                    ProfileBanEntry banEntry = new ProfileBanEntry(
+                        player.getGameProfile(), new Date(), "ModLogger", null, banMessage
+                    );
+                    banList.add(banEntry);
+                    player.connection.disconnect(new StringTextComponent(banMessage));
+            } else if (!playerWhitelisted && fileHandler.config.kick.onBanned) {
                 if (fileHandler.config.kick.showBannedMods) {
                     player.connection.disconnect(
                         new StringTextComponent(fileHandler.config.kick.bannedMessageWithMods.replace(

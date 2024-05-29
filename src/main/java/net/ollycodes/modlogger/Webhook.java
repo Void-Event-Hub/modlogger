@@ -60,7 +60,8 @@ public class Webhook {
         String uuid, String username, Date timestamp, boolean playerWhitelisted,
         List<String> defaultMods, List<String> ignoredMods, List<String> addedMods, List<String> bannedMods
     ) {
-        String action = ModLogger.fileHandler.config.kick.onBanned ? "Kicked" : "None";
+        String action = ModLogger.fileHandler.config.ban.onBanned ? "Banned"
+                : ModLogger.fileHandler.config.kick.onBanned ? "Kicked" : "None";
         String message = prepareMessage(bannedMessage, uuid, username, timestamp, defaultMods, ignoredMods)
             .replace("<BANNED_COUNT>", String.valueOf(bannedMods.size()))
             .replace("<ADDED_COUNT>", String.valueOf(addedMods.size()))
