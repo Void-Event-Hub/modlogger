@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.Connection;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.players.UserBanList;
+import net.minecraft.server.players.UserBanListEntry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -104,7 +106,17 @@ public class ModLogger {
             }
 
         } else if (!bannedMods.isEmpty()) {
-            if (fileHandler.config.kick.onBanned && !playerWhitelisted) {
+            if (!playerWhitelisted && fileHandler.config.ban.onBanned) {
+                    UserBanList banList = server.getPlayerList().getBans();
+                    String banMessage = fileHandler.config.ban.banMessage.replace(
+                        "%s", webhook.formatModsList(bannedMods, false)
+                    );
+                    UserBanListEntry banEntry = new UserBanListEntry(
+                        profile, new Date(), "ModLogger", null, banMessage
+                    );
+                    banList.add(banEntry);
+                    info.setReturnValue(new TextComponent(banMessage));
+            } else if (!playerWhitelisted && fileHandler.config.kick.onBanned) {
                 if (fileHandler.config.kick.showBannedMods) {
                     info.setReturnValue(
                         new TextComponent(fileHandler.config.kick.bannedMessageWithMods.replace(
