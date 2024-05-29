@@ -34,9 +34,8 @@ public class Config {
         public String bannedMessage = "You have been kicked for using banned mods. Please remove them and rejoin.";
         public String addedMessage = "You have been kicked for using additional mods. Please remove them and rejoin.";
         public String requiredMessage = "You have been kicked for removing required mods. Please re-add them and rejoin.";
-        public String bannedMessageWithMods = "You have been kicked for using the following banned mods: %s Please remove them and rejoin.";
-        public String addedMessageWithMods = "You have been kicked for using the following additional mods: %s Please remove them and rejoin.";
-        public String requiredMessageWithMods = "You have been kicked for removing the following required mods: %s Please re-add them and rejoin.";
-        public List<String> playerWhitelist = new ArrayList<>();
+        public String bannedMessageWithMods = "You have been kicked for using the following banned mods:\n%s\nPlease remove them and rejoin.";
+        public String addedMessageWithMods = "You have been kicked for using the following additional mods:\n%s\nPlease remove them and rejoin.";
+        public String requiredMessageWithMods = "You have been kicked for removing the following required mods:\n%s\nPlease re-add them and rejoin.";
     }
 }
