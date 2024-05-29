@@ -69,7 +69,7 @@ public class ModLogger {
         List<String> defaultMods = new ArrayList<>();
         List<String> ignoredMods = new ArrayList<>();
         boolean playerWhitelisted = (
-                fileHandler.config.kick.playerWhitelist.contains(player.getName().getString()) || (
+                fileHandler.config.playerWhitelist.contains(player.getName().getString()) || (
                     fileHandler.config.bypassKickPermissionLevel != -1
                     && server.getProfilePermissions(player.getGameProfile()) >= fileHandler.config.bypassKickPermissionLevel
                 )

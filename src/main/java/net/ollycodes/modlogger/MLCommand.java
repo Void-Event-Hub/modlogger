@@ -62,17 +62,17 @@ public class MLCommand {
         try {
             ModLogger.fileHandler.loadConfig();
             if (Objects.equals(action, "add")) {
-                if (ModLogger.fileHandler.config.kick.playerWhitelist.contains(username)) {
+                if (ModLogger.fileHandler.config.playerWhitelist.contains(username)) {
                     context.getSource().sendFailure(new StringTextComponent("[ModLogger] Player is already whitelisted"));
                     return 0;
                 }
-                ModLogger.fileHandler.config.kick.playerWhitelist.add(username);
+                ModLogger.fileHandler.config.playerWhitelist.add(username);
             } else {
-                if (!ModLogger.fileHandler.config.kick.playerWhitelist.contains(username)) {
+                if (!ModLogger.fileHandler.config.playerWhitelist.contains(username)) {
                     context.getSource().sendFailure(new StringTextComponent("[ModLogger] Player is not whitelisted"));
                     return 0;
                 }
-                ModLogger.fileHandler.config.kick.playerWhitelist.remove(username);
+                ModLogger.fileHandler.config.playerWhitelist.remove(username);
             }
             ModLogger.fileHandler.saveConfig();
         } catch (IOException e) {

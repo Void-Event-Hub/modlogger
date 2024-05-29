@@ -11,6 +11,7 @@ public class Config {
     public boolean matchExactModName = false;
     public int commandPermissionLevel = 4;
     public int bypassKickPermissionLevel = 4;
+    public List<String> playerWhitelist = new ArrayList<>();
 
     public WebhookConfig webhook = new WebhookConfig();
     public KickConfig kick = new KickConfig();
