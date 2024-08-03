@@ -16,7 +16,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.ConnectionData;
 import org.slf4j.Logger;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.io.IOException;
@@ -90,12 +89,12 @@ public class ModLogger {
             if (fileHandler.config.kick.onRequired && !playerWhitelisted) {
                 if (fileHandler.config.kick.showRequiredMods) {
                     info.setReturnValue(
-                            new TextComponent(fileHandler.config.kick.requiredMessageWithMods.replace(
-                                    "%s", webhook.formatModsList(requiredMods, false)
+                            Component.literal(fileHandler.config.kick.requiredMessageWithMods.replace(
+                                "%s", webhook.formatModsList(requiredMods, false)
                             ))
                     );
                 } else {
-                    info.setReturnValue(new TextComponent(fileHandler.config.kick.requiredMessage));
+                    info.setReturnValue(Component.literal(fileHandler.config.kick.requiredMessage));
                 }
             }
             if (fileHandler.config.webhook.onRequired) {
@@ -115,16 +114,16 @@ public class ModLogger {
                         profile, new Date(), "ModLogger", null, banMessage
                     );
                     banList.add(banEntry);
-                    info.setReturnValue(new TextComponent(banMessage));
+                    info.setReturnValue(Component.literal(banMessage));
             } else if (!playerWhitelisted && fileHandler.config.kick.onBanned) {
                 if (fileHandler.config.kick.showBannedMods) {
                     info.setReturnValue(
-                        new TextComponent(fileHandler.config.kick.bannedMessageWithMods.replace(
+                        Component.literal(fileHandler.config.kick.bannedMessageWithMods.replace(
                             "%s", webhook.formatModsList(bannedMods, false)
                         ))
                     );
                 } else {
-                    info.setReturnValue(new TextComponent(fileHandler.config.kick.bannedMessage));
+                    info.setReturnValue(Component.literal(fileHandler.config.kick.bannedMessage));
                 }
             }
             if (fileHandler.config.webhook.onBanned) {
@@ -138,12 +137,12 @@ public class ModLogger {
             if (fileHandler.config.kick.onAdded && !playerWhitelisted) {
                 if (fileHandler.config.kick.showAddedMods) {
                     info.setReturnValue(
-                            new TextComponent(fileHandler.config.kick.addedMessageWithMods.replace(
+                            Component.literal(fileHandler.config.kick.addedMessageWithMods.replace(
                                 "%s", webhook.formatModsList(addedMods, false)
                             ))
                     );
                 } else {
-                    info.setReturnValue(new TextComponent(fileHandler.config.kick.addedMessage));
+                    info.setReturnValue(Component.literal(fileHandler.config.kick.addedMessage));
                 }
             }
             if (fileHandler.config.webhook.onAdded) {

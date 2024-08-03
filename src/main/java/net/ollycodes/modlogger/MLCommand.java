@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class MLCommand {
 
         if (!List.of("add", "remove").contains(action)) {
             context.getSource().sendFailure(
-                new TextComponent("[ModLogger] Invalid action: /ml whitelist <add|remove> <username>")
+                Component.literal("[ModLogger] Invalid action: /ml whitelist <add|remove> <username>")
             );
             return 0;
         }
@@ -63,13 +63,13 @@ public class MLCommand {
             ModLogger.fileHandler.loadConfig();
             if (Objects.equals(action, "add")) {
                 if (ModLogger.fileHandler.config.playerWhitelist.contains(username)) {
-                    context.getSource().sendFailure(new TextComponent("[ModLogger] Player is already whitelisted"));
+                    context.getSource().sendFailure(Component.literal("[ModLogger] Player is already whitelisted"));
                     return 0;
                 }
                 ModLogger.fileHandler.config.playerWhitelist.add(username);
             } else {
                 if (!ModLogger.fileHandler.config.playerWhitelist.contains(username)) {
-                    context.getSource().sendFailure(new TextComponent("[ModLogger] Player is not whitelisted"));
+                    context.getSource().sendFailure(Component.literal("[ModLogger] Player is not whitelisted"));
                     return 0;
                 }
                 ModLogger.fileHandler.config.playerWhitelist.remove(username);
@@ -80,12 +80,12 @@ public class MLCommand {
             return 0;
         }
 
-        context.getSource().sendSuccess(
-            new TextComponent(
+        context.getSource().sendSystemMessage(
+            Component.literal(
                 "[ModLogger] %1 has been %2 the whitelist"
                     .replace("%1", username)
                     .replace("%2", Objects.equals(action, "add") ? "added to" : "removed from")
-            ), false
+            )
         );
         return 1;
     }
@@ -95,10 +95,12 @@ public class MLCommand {
 
         try {
             ModLogger.fileHandler.loadConfig();
-            context.getSource().sendSuccess(new TextComponent("[ModLogger] Reloaded mod logger config."), false);
+            context.getSource().sendSystemMessage(
+                Component.literal("[ModLogger] Reloaded mod logger config.")
+            );
         } catch (IOException e) {
             ModLogger.logger.error("Failed to reload config: {}", e.getMessage());
-            context.getSource().sendFailure(new TextComponent("[ModLogger] Failed to reload mod logger config."));
+            context.getSource().sendFailure(Component.literal("[ModLogger] Failed to reload mod logger config."));
         }
 
         return 1;
